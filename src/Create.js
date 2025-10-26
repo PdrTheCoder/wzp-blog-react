@@ -1,59 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import MDEditor from '@uiw/react-md-editor';
+import useFetch from "./useFetch";
+import useFetchPost from "./useFetchPost";
 
 const Create = () => {
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
-    const [author, setAuthor] = useState('mario');
-    const [isPending, setIsPending] = useState(false);
     const history = useHistory();
+
+    const [title, setTitle] = useState('');
+    const [value, setValue] = useState();
+    const [category, setCategory] = useState("");
+    const { data: categories, isCtgPending, ctgError } = useFetch('http://127.0.0.1:5000/api/categories');
+    const { postData, resData, error, isPending } = useFetchPost();
+
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+    }
+
+    const handleCateChange = (e) => {
+        setCategory(e.target.value);
+    };
+
+    useEffect(() => {
+        if (categories && categories.length > 0 && category === "") {
+            setCategory(categories[0].id);
+        }
+    }, [categories]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const blog = { title, body, author };
-
-        setIsPending(true);
-        fetch('http://127.0.0.1:5000/blogs/', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(blog)
-        }).then(() => {
-            console.log("new blog added.")
-            setIsPending(false);
-            history.push('/');
-        })
+        const blog = { title, body: value, category_id: category };
+        postData(
+            'http://127.0.0.1:5000/api/blogs', blog
+        ).then((res) => {
+            if (res && res.code === 0) {
+                history.push("/");
+            }
+        });
     }
 
     return (
         <div className="create">
             <h2>Add a new blog</h2>
             <form onSubmit={handleSubmit}>
-                <label>Blog Titile:</label>
-                <input
-                    type="text"
-                    required
-                    value={ title }
-                    onChange={ (e) => setTitle(e.target.value)}
-                />
-                <label>Blog Body:</label>
-                <textarea
-                    required
-                    value = { body }
-                    onChange={ (e) => setBody(e.target.value)}
-                ></textarea>
-                <label>Blog Author:</label>
-                <select
-                    value = { author }
-                    onChange = { (e) => setAuthor(e.target.value)}
-                >
-                    <option value="mario">Mario</option>
-                    <option value="luige">Luige</option>
-                </select>
-                { !isPending && <button>Add Blog</button> }
-                { isPending && <button disabled >Adding Blog...</button> }
+                <div className="nes-field create-input-group">
+                    <label>Blog Titile:</label>
+                    <input
+                        type="text"
+                        required
+                        value={title}
+                        className="nes-input"
+                        onChange={handleTitleChange}
+                    />
+                </div>
+                <div className="my-md-editor create-input-group">
+                    <label>Blog Body:</label>
+                    <div className="container editor-wrapper">
+                        <MDEditor
+                            value={value}
+                            onChange={setValue}
+                        />
+                    </div>
+                </div>
+                <div className="create-input-group">
+                    <label>Blog Titile:</label>
+                    {ctgError && <div>{ctgError}</div>}
+                    <div className="nes-select">
+                        <select name="cateValue" value={category} onChange={handleCateChange}>
+                            {categories && categories.map((cat) => (
+                                <option value={cat.id} key={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                {error && <div><p className="nes-balloon from-left nes-pointer nes-text is-error">{error}</p></div>}
+                {!isPending && <button className="nes-btn is-primary">Add Blog</button>}
+                {isPending && <button disabled >Adding Blog...</button>}
             </form>
         </div>
     );
 }
- 
+
 export default Create;

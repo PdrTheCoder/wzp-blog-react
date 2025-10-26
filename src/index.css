@@ -1,6 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 /* base styles */
+body {
+  margin: 0px;
+  background-color: #1c1c1c;
+}
+
+a {
+  color: #000000 !important;
+}
+
+@font-face {
+  font-family: "Zpix";
+  src: url("./assets/fonts/zpix.ttf") format("truetype");
+}
+
+@media (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+  .nes-btn {
+    border-image-repeat: stretch;
+  }
+}
+
+
+* {
+  font-family: "Zpix", "Press Start 2P", monospace !important;
+}
+
 .App {
   margin: 0;
   display: grid;
@@ -10,18 +35,20 @@
     "navbar navbar navbar"
     ". content .";
   min-height: 100vh;
-  row-gap: 20px;
+  background-color: #ffffff;
 }
 
+/* narbar */
 .navbar {
+  position: sticky;
+  top: 0;
   grid-area: navbar;
-  background-color: white;
+  background-color: #003aa5;
   display: grid;
   padding: 0.5rem;
   grid-template-columns: 1fr minmax(600px, 800px) 1fr;
   grid-template-areas: 
     ". navbar-core .";
-  border-bottom: 6px solid #000;
 }
 
 .navbar-core {
@@ -32,6 +59,7 @@
 
 .content {
   grid-area: content;
+  margin-top: 20px;
 }
 
 .navbar h1 {
@@ -45,6 +73,11 @@
   text-decoration: none;
   padding: 6px;
 }
+.navbar button {
+  margin-left: 16px;
+  text-decoration: none;
+}
+
 .navbar a:hover {
   color: #f1356d;
 }
@@ -63,12 +96,11 @@
 
 .blog-preview h2 {
   font-size: 20px;;
-  color: #f1356d;
   margin-bottom: 8px;
 }
 
-.blog-preview a{
-  text-decoration: none;
+.blog-preview a {
+  text-decoration: none !important;
 }
 
 /* blog details */
@@ -93,33 +125,37 @@
 
 
 /* create new blog form */
-.create {
-  max-width: 400px;
-  margin: 0 auto;
-  text-align: center;
-}
+
 .create label {
   text-align: left;
   display: block;
 }
 .create h2 {
-  font-size: 20px;
-  color: #f1356d;
   margin-bottom: 30px;
 }
-.create input, .create textarea, .create select {
-  width: 100%;
-  padding: 6px 10px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
-  display: block;
+
+.create .create-input-group {
+  margin-bottom: 20px;
 }
-.create button {
-  background: #f1356d;
-  color: #fff;
-  border: 0;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
+
+.container {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    margin: 0 auto;
+
+    * {
+        font-family: inherit !important;
+    }
+}
+
+/* Login page */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  padding-top: 15vh;
+}
+
+.login .login-input-field {
+  margin-bottom: 20px;
 }
